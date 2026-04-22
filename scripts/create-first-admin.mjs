@@ -45,15 +45,21 @@ async function main() {
     process.exit(0);
   }
 
-  const nombre = process.argv[2] || "admin";
-  const password = process.argv[3] || "admin123";
+  const nombre = process.argv[2] || process.env.FIRST_ADMIN_USER;
+  const password = process.argv[3] || process.env.FIRST_ADMIN_PASSWORD;
+  if (!nombre || !password) {
+    console.log(
+      "No se creó admin inicial: faltan FIRST_ADMIN_USER/FIRST_ADMIN_PASSWORD."
+    );
+    process.exit(0);
+  }
   const hash = await bcrypt.hash(password, 10);
 
   await pool.query(
     "INSERT INTO Usuario (nombre, password, rol, createdAt) VALUES (?, ?, ?, NOW())",
     [nombre, hash, "ADMIN"]
   );
-  console.log(`Primer usuario creado: ${nombre} (rol ADMIN). Contraseña: la que pasaste por parámetro o "admin123".`);
+  console.log(`Primer usuario creado: ${nombre} (rol ADMIN).`);
   console.log("Cambiá la contraseña después del primer login.");
   process.exit(0);
 }
