@@ -50,7 +50,7 @@ export default async function AdminPage() {
               title="Productos con stock bajo"
               value={lowStockCount}
               diff=""
-              icon={<WarningAmberOutlinedIcon color="warning" />}
+              icon={<WarningAmberOutlinedIcon />}
               diffColor="warning"
               progress={lowStockCount > 0 ? 100 : 0}
             />

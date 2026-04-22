@@ -51,8 +51,8 @@ export default function LoginForm() {
     >
       <Box position="relative" width="10rem" height="3.25rem" margin="0 auto 0.75rem">
         <Image
-          alt="Inventory Demo"
-          src={withBasePath("/logo.svg")}
+          alt=""
+          src={withBasePath("/logo.png")}
           fill
           priority
           style={{ objectFit: "contain" }}

@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import {
   Box,
-  Paper,
   FormControl,
   InputLabel,
   Select,
@@ -112,7 +111,17 @@ export function ListaHistorial({ usuarios }: Props) {
 
   return (
     <>
-      <Paper variant="outlined" sx={{ p: 2, mb: 2 }}>
+      <Box
+        sx={{
+          p: 2,
+          mb: 2,
+          borderRadius: 3,
+          bgcolor: "background.paper",
+          border: "1px solid",
+          borderColor: "divider",
+          boxShadow: "0 1px 4px rgba(15, 23, 42, 0.06)",
+        }}
+      >
         <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1.5 }}>
           Filtros
         </Typography>
@@ -167,65 +176,87 @@ export function ListaHistorial({ usuarios }: Props) {
             </Select>
           </FormControl>
         </Box>
-      </Paper>
+      </Box>
 
-      <Paper variant="outlined" sx={{ overflow: "hidden" }}>
-        {movimientos.length === 0 ? (
-          <Box sx={{ py: 4, textAlign: "center" }}>
-            <Typography color="text.secondary">
-              No hay movimientos con los filtros elegidos.
-            </Typography>
-          </Box>
-        ) : (
-          <Box sx={{ display: "flex", flexDirection: "column" }}>
-            {paginatedMovimientos.map((m) => (
+      {movimientos.length === 0 ? (
+        <Box sx={{ py: 4, textAlign: "center" }}>
+          <Typography color="text.secondary">
+            No hay movimientos con los filtros elegidos.
+          </Typography>
+        </Box>
+      ) : (
+        <Box
+          component="ul"
+          sx={{
+            m: 0,
+            p: 0,
+            listStyle: "none",
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+          }}
+        >
+          {paginatedMovimientos.map((m) => (
+            <Box
+              component="li"
+              key={`${m.tipo}-${m.id}`}
+              sx={{
+                width: "100%",
+                borderRadius: 3,
+                border: "1px solid",
+                borderColor: m.tipo === "retiro" ? "error.light" : "success.light",
+                bgcolor:
+                  m.tipo === "retiro"
+                    ? "rgba(244, 67, 54, 0.06)"
+                    : "rgba(76, 175, 80, 0.06)",
+                p: 2,
+                boxShadow: "0 1px 4px rgba(15, 23, 42, 0.06)",
+              }}
+            >
               <Box
-                key={`${m.tipo}-${m.id}`}
                 sx={{
-                  
-                  py: 1.5,
-                  px: 2,
-                  borderBottom: "1px solid",
-                  borderColor: "divider",
-                  "&:last-of-type": { borderBottom: "none" },
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  gap: 1.25,
                 }}
               >
+                <Chip
+                  label={m.tipo === "retiro" ? "Retiro" : "Compra"}
+                  size="small"
+                  color={m.tipo === "retiro" ? "error" : "success"}
+                  variant="outlined"
+                  sx={{ width: "fit-content", minWidth: 88 }}
+                />
+                <Typography variant="body2" sx={{ lineHeight: 1.4 }}>
+                  {m.articuloNombre} · {m.cantidad}{" "}
+                  {m.cantidad === 1 ? "unidad" : "unidades"}
+                </Typography>
                 <Box
                   sx={{
+                    display: "flex",
+                    flexWrap: "wrap",
                     alignItems: "center",
+                    gap: 1,
+                    columnGap: 2,
+                    rowGap: 0.5,
                     width: "100%",
-                    borderRadius: 2,
-                    display: "grid",
-                    border: "1px solid",rowGap: 2,
-                    borderColor: m.tipo === "retiro" ? "error.light" : "success.light",
-                    bgcolor: m.tipo === "retiro" ? "rgba(244, 67, 54, 0.04)" : "rgba(76, 175, 80, 0.04)",
-                    p: 1.25,
                   }}
                 >
-                  <Chip
-                    label={m.tipo === "retiro" ? "Retiro" : "Compra"}
-                    size="small"
-                    color={m.tipo === "retiro" ? "error" : "success"}
-                    variant="outlined"
-                    sx={{ width: 100 }}
-                  />
-                  <Typography variant="body2">
-                    {m.articuloNombre} · {m.cantidad} {m.cantidad === 1 ? "unidad" : "unidades"}
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary" >
+                  <Typography variant="caption" color="text.secondary">
                     {formatearFecha(m.fecha)}
                   </Typography>
                   {m.usuarioNombre && (
-                    <Typography variant="caption" color="text.secondary" sx={{ gridColumn: "2 / -1" }}>
+                    <Typography variant="caption" color="text.secondary">
                       {m.usuarioNombre}
                     </Typography>
                   )}
                 </Box>
               </Box>
-            ))}
-          </Box>
-        )}
-      </Paper>
+            </Box>
+          ))}
+        </Box>
+      )}
       {totalPages > 1 && (
         <Box display="flex" justifyContent="center" sx={{ my: 3 }}>
           <Pagination

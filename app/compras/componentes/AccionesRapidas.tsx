@@ -57,26 +57,62 @@ export default function AccionesRapidas() {
         sx={{
           display: "grid",
           gridTemplateColumns: {
-            xs: "repeat(2, 1fr)", // mobile
-            md: "repeat(2, 1fr)", // desktop
+            xs: "repeat(2, 1fr)",
+            md: "repeat(2, 1fr)",
           },
           gap: 2,
           mx: "auto",
+          alignItems: "stretch",
         }}
       >
-        <AccionItem icon={<ListAltOutlinedIcon />} label="Stock" href="/compras/stock" />
-        <AccionItem icon={<AddBoxOutlinedIcon />} label="Agregar" href="/compras/agregar" />
-        <AccionItem icon={<RemoveCircleOutlineIcon />} label="Retirar" href="/compras/retirar" />
+        <AccionItem
+          pastel="sky"
+          icon={<ListAltOutlinedIcon />}
+          label="Stock"
+          href="/compras/stock"
+        />
+        <AccionItem
+          pastel="mint"
+          icon={<AddBoxOutlinedIcon />}
+          label="Agregar"
+          href="/compras/agregar"
+        />
+        <AccionItem
+          pastel="peach"
+          icon={<RemoveCircleOutlineIcon />}
+          label="Retirar"
+          href="/compras/retirar"
+        />
         {puedeVerHistorialYMetricas && (
-          <AccionItem icon={<HistoryOutlinedIcon />} label="Historial" href="/compras/historial" />
+          <AccionItem
+            pastel="lavender"
+            icon={<HistoryOutlinedIcon />}
+            label="Historial"
+            href="/compras/historial"
+          />
         )}
         {puedeVerHistorialYMetricas && (
-          <AccionItem icon={<BarChartOutlinedIcon />} label="Métricas" href="/compras/metricas" />
+          <AccionItem
+            pastel="butter"
+            icon={<BarChartOutlinedIcon />}
+            label="Métricas"
+            href="/compras/metricas"
+          />
         )}
         {esAdmin && (
-          <AccionItem icon={<PeopleAltOutlinedIcon />} label="Usuarios" href="/compras/usuarios" />
+          <AccionItem
+            pastel="rose"
+            icon={<PeopleAltOutlinedIcon />}
+            label="Usuarios"
+            href="/compras/usuarios"
+          />
         )}
-        <AccionItem icon={<LogoutOutlinedIcon />} label="Cerrar sesión" onClick={cerrarSesion} />
+        <AccionItem
+          pastel="slate"
+          icon={<LogoutOutlinedIcon />}
+          label="Cerrar sesión"
+          onClick={cerrarSesion}
+        />
       </Box>
     </Box>
   );

@@ -17,7 +17,7 @@ export default async function NuevaCompraPage() {
       >
         <Typography
           variant="h3"
-          sx={{ flexGrow: 1, textAlign: "center", color: "white" }}
+          sx={{ flexGrow: 1, textAlign: "center", color: "text.primary" }}
         >
           Nueva Compra
         </Typography>

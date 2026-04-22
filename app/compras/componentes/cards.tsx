@@ -11,13 +11,15 @@ type StatCardProps = {
   value: number | string;
   icon: React.ReactNode;
 
-  diff?: React.ReactNode;   // 👈 ACÁ
+  diff?: React.ReactNode;
   diffColor?: "primary" | "warning" | "success" | "error";
 
   progress?: number;
   highlight?: "primary" | "warning";
 };
 
+/** Altura mínima común para que “Total” y “Stock bajo” ocupen lo mismo. */
+const STAT_CARD_MIN_HEIGHT = 172;
 
 export default function StatCard({
   title,
@@ -30,28 +32,39 @@ export default function StatCard({
 }: StatCardProps) {
   const isHighlighted = Boolean(highlight);
 
+  const iconColor = isHighlighted
+    ? "primary.main"
+    : diffColor === "warning"
+      ? "warning.main"
+      : "text.secondary";
+
   return (
     <Card
       elevation={0}
-      
-      
       sx={{
-        margin:"0 auto",
+        margin: "0 auto",
         borderRadius: 3,
         p: 3,
-        border: isHighlighted ? "none" : "1px solid",
+        border: "1px solid",
         borderColor: "divider",
-        bgcolor: isHighlighted ? "white" : "background.paper",
-        color: isHighlighted ? "rgb(0, 174, 195)" : "text.primary",
-        // Sombra fija para evitar pasar funciones a componentes cliente
-        boxShadow: isHighlighted
-          ? "0px 8px 24px rgba(0, 174, 195, 0.3)"
-          : "0 1px 2px rgba(0,0,0,0.05)",
+        bgcolor: "background.paper",
+        color: "text.primary",
+        boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
         width: "100%",
+        minHeight: STAT_CARD_MIN_HEIGHT,
+        display: "flex",
+        flexDirection: "column",
       }}
     >
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-        {/* Header */}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 1,
+          flex: 1,
+          minHeight: 0,
+        }}
+      >
         <Box
           sx={{
             display: "flex",
@@ -59,22 +72,15 @@ export default function StatCard({
             alignItems: "center",
           }}
         >
-          <Typography
-            variant="body1"
-            sx={{
-              fontWeight: 600,
-              opacity: isHighlighted ? 0.9 : 1,
-            }}
-          >
+          <Typography variant="body1" sx={{ fontWeight: 600 }}>
             {title}
           </Typography>
 
-          <Box sx={{ opacity: isHighlighted ? 0.8 : 1 }}>
+          <Box sx={{ color: iconColor, display: "flex", alignItems: "center" }}>
             {icon}
           </Box>
         </Box>
 
-        {/* Value + diff */}
         <Box
           sx={{
             display: "flex",
@@ -89,8 +95,8 @@ export default function StatCard({
             {value}
           </Typography>
 
-          {diff && (
-            isHighlighted ? (
+          {diff &&
+            (isHighlighted ? (
               <Chip
                 label={diff}
                 size="small"
@@ -110,30 +116,37 @@ export default function StatCard({
               >
                 {diff}
               </Box>
-            )
-          )}
+            ))}
         </Box>
 
-        {/* Progress (opcional) */}
-        {progress !== undefined && (
-          <LinearProgress
-            variant="determinate"
-            value={progress}
-            sx={{
-              height: 6,
-              borderRadius: 3,
-              bgcolor: isHighlighted
-                ? "rgba(255,255,255,0.2)"
-                : "grey.200",
-              "& .MuiLinearProgress-bar": {
-                bgcolor: isHighlighted
-                  ? "rgba(255,255,255,0.7)"
-                  : `${highlight ?? diffColor}.main`,
+        <Box
+          sx={{
+            mt: "auto",
+            pt: 0.5,
+            minHeight: 6,
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          {progress !== undefined ? (
+            <LinearProgress
+              variant="determinate"
+              value={progress}
+              sx={{
+                width: "100%",
+                height: 6,
                 borderRadius: 3,
-              },
-            }}
-          />
-        )}
+                bgcolor: "grey.200",
+                "& .MuiLinearProgress-bar": {
+                  bgcolor: `${highlight ?? diffColor}.main`,
+                  borderRadius: 3,
+                },
+              }}
+            />
+          ) : (
+            <Box sx={{ width: "100%", height: 6 }} aria-hidden />
+          )}
+        </Box>
       </Box>
     </Card>
   );

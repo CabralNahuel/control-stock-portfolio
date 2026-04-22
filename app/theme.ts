@@ -27,7 +27,7 @@ export const theme = createTheme({
       secondary: "#45464d",
     },
     background: {
-      default: "#fcf8fa",
+      default: "#e4e8ef",
       paper: "#ffffff",
     },
     divider: "#c6c6cd",
@@ -36,7 +36,8 @@ export const theme = createTheme({
     borderRadius: 8,
   },
   typography: {
-    fontFamily: 'var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    fontFamily:
+      'var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
     h1: { fontWeight: 600, letterSpacing: "-0.02em" },
     h2: { fontWeight: 600 },
     h3: { fontWeight: 600 },
@@ -49,7 +50,7 @@ export const theme = createTheme({
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          backgroundColor: "#fcf8fa",
+          backgroundColor: "#e4e8ef",
           color: "#1b1b1d",
         },
       },

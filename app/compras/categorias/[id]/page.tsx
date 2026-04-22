@@ -30,10 +30,10 @@ export default async function CategoriaDetallePage({ params }: Props) {
         gap: 2,
       }}
     >
-      <Typography variant="h6" sx={{ fontWeight: 600 ,color: "white",textAlign: "center"}}>
+      <Typography variant="h6" sx={{ fontWeight: 600, color: "text.primary", textAlign: "center" }}>
         {categoria.nombre}
       </Typography>
-      <Typography variant="body2" color="white" textAlign="center">
+      <Typography variant="body2" color="text.secondary" textAlign="center">
         {articulos.length}{" "}
         {articulos.length === 1 ? "artículo" : "artículos"} en esta categoría
       </Typography>

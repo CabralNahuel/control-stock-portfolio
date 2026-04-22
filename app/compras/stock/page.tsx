@@ -11,7 +11,6 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Paper,
   Button,
   Dialog,
   DialogTitle,
@@ -171,8 +170,10 @@ export default function StockPage() {
                   borderRadius: 3,
                   border: "1px solid",
                   borderColor: "divider",
+                  bgcolor: "background.paper",
                   cursor: "pointer",
                   transition: "all 0.2s ease",
+                  boxShadow: "0 1px 4px rgba(15, 23, 42, 0.06)",
                   "&:hover": {
                     borderColor: "primary.main",
                     boxShadow: "0px 4px 12px rgba(0, 174, 195, 0.2)",
@@ -218,7 +219,16 @@ export default function StockPage() {
       )}
 
       {/* Filtros */}
-      <Paper variant="outlined" sx={{ p: 2 }}>
+      <Box
+        sx={{
+          p: 2,
+          borderRadius: 3,
+          bgcolor: "background.paper",
+          border: "1px solid",
+          borderColor: "divider",
+          boxShadow: "0 1px 4px rgba(15, 23, 42, 0.06)",
+        }}
+      >
         <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1.5 }}>
           Filtros y orden
         </Typography>
@@ -282,29 +292,40 @@ export default function StockPage() {
             </Select>
           </FormControl>
         </Box>
-      </Paper>
+      </Box>
 
       {/* Lista de artículos */}
-      <Paper variant="outlined" sx={{ overflow: "hidden" }}>
-        {paginatedItems.length === 0 ? (
-          <Box sx={{ py: 4, textAlign: "center" }}>
-            <Typography color="text.secondary">
-              No hay artículos con los filtros elegidos.
-            </Typography>
-          </Box>
-        ) : (
-          paginatedItems.map((item) => (
-            <StockListItem
-              key={item.id}
-              item={item}
-              onRetirar={(id) => router.push(`/compras/retirar?articulo=${id}`)}
-              onDetalle={(id) => router.push(`/compras/stock/${id}`)}
-              onEliminar={(id) => setEliminarId(id)}
-              puedeEliminar={puedeEliminar}
-            />
-          ))
-        )}
-      </Paper>
+      {paginatedItems.length === 0 ? (
+        <Box sx={{ py: 4, textAlign: "center" }}>
+          <Typography color="text.secondary">
+            No hay artículos con los filtros elegidos.
+          </Typography>
+        </Box>
+      ) : (
+        <Box
+          component="ul"
+          sx={{
+            m: 0,
+            p: 0,
+            listStyle: "none",
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+          }}
+        >
+          {paginatedItems.map((item) => (
+            <Box component="li" key={item.id} sx={{ width: "100%" }}>
+              <StockListItem
+                item={item}
+                onRetirar={(id) => router.push(`/compras/retirar?articulo=${id}`)}
+                onDetalle={(id) => router.push(`/compras/stock/${id}`)}
+                onEliminar={(id) => setEliminarId(id)}
+                puedeEliminar={puedeEliminar}
+              />
+            </Box>
+          ))}
+        </Box>
+      )}
 
       {totalPages > 1 && (
         <Box display="flex" justifyContent="center" sx={{ mt: 1 }}>

@@ -24,7 +24,7 @@ export default function RootLayout({
           minHeight: "100vh",
           margin: 0,
           background:
-            "radial-gradient(circle at top, rgba(19, 27, 46, 0.06) 0%, rgba(252, 248, 250, 1) 50%)",
+            "radial-gradient(ellipse 120% 80% at 50% 0%, #d8dce6 0%, #e4e8ef 42%, #e8ecf2 100%)",
         }}
       >
         <ThemeProvider theme={theme}>
