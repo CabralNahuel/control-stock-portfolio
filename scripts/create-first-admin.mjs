@@ -25,26 +25,48 @@ function loadEnv() {
   }
 }
 
-if (!process.env.DB_HOST) loadEnv();
+if (!process.env.DB_HOST && !process.env.DATABASE_URL) loadEnv();
 
 const useSsl =
   process.env.DB_SSL === "true" || process.env.DB_SSL === "1";
 
-const pool = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  port: Number(process.env.DB_PORT) || 3306,
-  ...(useSsl
-    ? {
-        ssl: {
-          minVersion: "TLSv1.2",
-          rejectUnauthorized: true,
-        },
-      }
-    : {}),
-});
+const sslOption = useSsl
+  ? {
+      ssl: {
+        minVersion: "TLSv1.2",
+        rejectUnauthorized: true,
+      },
+    }
+  : {};
+
+/** Misma DB que Prisma (`DATABASE_URL`) para no correr el script en una base vacía. */
+function poolConfig() {
+  const rawUrl = process.env.DATABASE_URL?.trim();
+  if (rawUrl) {
+    const u = new URL(rawUrl);
+    const database = decodeURIComponent(
+      u.pathname.replace(/^\//, "").split("?")[0] || ""
+    );
+    return {
+      host: u.hostname,
+      port: Number(u.port || 3306),
+      user: decodeURIComponent(u.username),
+      password: decodeURIComponent(u.password),
+      database,
+      ...sslOption,
+    };
+  }
+  return {
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    port: Number(process.env.DB_PORT) || 3306,
+    ...sslOption,
+  };
+}
+
+const pool = mysql.createPool(poolConfig());
 
 async function main() {
   const [rows] = await pool.query(
