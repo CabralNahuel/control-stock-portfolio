@@ -1,10 +1,8 @@
-import { getUsuarios } from "@/app/services/usuarios";
 import { getArticulos, getCategorias } from "@/app/services/articulos";
 import NuevaCompraForm from "./NuevaCompraForm";
 import { Box, Typography } from "@mui/material";
 
 export default async function NuevaCompraPage() {
-  const usuarios = await getUsuarios();
   const articulos = await getArticulos();
   const categorias = await getCategorias();
 
@@ -24,11 +22,7 @@ export default async function NuevaCompraPage() {
           Nueva Compra
         </Typography>
       </Box>
-      <NuevaCompraForm
-        usuarios={usuarios}
-        articulos={articulos}
-        categorias={categorias}
-      />
+      <NuevaCompraForm articulos={articulos} categorias={categorias} />
     </>
   );
 }

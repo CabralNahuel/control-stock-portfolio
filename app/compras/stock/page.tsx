@@ -133,14 +133,17 @@ export default function StockPage() {
   return (
     <Box
       sx={{
+        width: "100%",
+        maxWidth: { xs: "100%", sm: "min(100%, 720px)", md: "min(100%, 1100px)", lg: "min(100%, 1400px)" },
         minHeight: "100dvh",
         pb: "80px",
         display: "flex",
         flexDirection: "column",
         gap: 2,
         pt: 4,
-        maxWidth: "1200px",
-        margin: "auto",
+        px: { xs: 1.5, sm: 2, md: 2.5 },
+        mx: "auto",
+        boxSizing: "border-box",
       }}
     >
       {/* Cards de categorías */}

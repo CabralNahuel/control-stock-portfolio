@@ -7,10 +7,8 @@ import {
   TextField,
   Button,
 } from "@mui/material";
-import { Usuario } from "@/app/models/usuario";
 import { Articulo } from "@/app/models/articulo";
 import { useState } from "react";
-import UsuarioSelect from "./components/UserSelect";
 import CantidadInput from "./components/CantidadInput";
 
 type Categoria = {
@@ -19,15 +17,12 @@ type Categoria = {
 };
 
 export default function NuevaCompraForm({
-  usuarios,
   articulos,
   categorias,
 }: {
-  usuarios: Usuario[];
   articulos: Articulo[];
   categorias: Categoria[];
 }) {
-  const [usuarioId, setUsuarioId] = useState<number | "">("");
   const { cantidad, incrementar, decrementar } = useNuevaCompra();
   const [articuloInput, setArticuloInput] = useState("");
   const [categoriaNombre, setCategoriaNombre] = useState("");
@@ -89,7 +84,7 @@ export default function NuevaCompraForm({
         display="flex"
         flexDirection="column"
         gap={2}
-        maxWidth={420}
+        maxWidth={{ xs: "100%", sm: 520 }}
         mx="auto"
         width="100%"
         bgcolor={"white"}
