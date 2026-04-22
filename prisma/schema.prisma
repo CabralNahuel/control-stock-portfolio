@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+model Categoria {
+  id        Int        @id @default(autoincrement())
+  nombre    String     @unique
+  articulos Articulo[]
+}
+
+model Articulo {
+  id          Int       @id @default(autoincrement())
+  nombre      String
+  stock       Int       @default(0)
+  stockBajo   Int?      // umbral: alertar cuando stock < stockBajo
+  categoriaId Int
+  createdAt   DateTime  @default(now())
+  deletedAt   DateTime? // borrado lógico: no se cuenta en stock
+  categoria   Categoria @relation(fields: [categoriaId], references: [id])
+  
+  compras     Compra[]
+  retiros     Retiro[]
+  
+
+  @@index([categoriaId], map: "Articulo_categoriaId_fkey")
+  @@map("Articulo")
+
+}
+
+model Usuario {
+  id                Int       @id @default(autoincrement())
+  nombre            String    @unique
+  password          String
+  rol               String    @default("EMPLEADO")
+  resetToken        String?   @db.VarChar(191)
+  resetTokenExpires DateTime?
+  passwordUpdatedAt DateTime?
+  createdAt         DateTime  @default(now())
+  deletedAt         DateTime? // borrado lógico: no puede loguearse ni aparecer en listados
+
+  retiros   Retiro[]
+  compras   Compra[]
+}
+model Compra {
+  id         Int      @id @default(autoincrement())
+  cantidad   Int
+  fecha      DateTime @default(now())
+  articuloId Int
+  usuarioId  Int?
+  articulo   Articulo @relation(fields: [articuloId], references: [id])
+  usuario    Usuario? @relation(fields: [usuarioId], references: [id])
+
+  @@index([articuloId], map: "Compra_articuloId_fkey")
+  @@index([usuarioId], map: "Compra_usuarioId_fkey")
+}
+
+model Retiro {
+  id         Int      @id @default(autoincrement())
+  cantidad   Int
+  fecha      DateTime @default(now())
+  usuarioId  Int
+  articuloId Int
+  articulo   Articulo @relation(fields: [articuloId], references: [id])
+  usuario    Usuario  @relation(fields: [usuarioId], references: [id])
+
+  @@index([articuloId], map: "Retiro_articuloId_fkey")
+  @@index([usuarioId], map: "Retiro_usuarioId_fkey")
+}
