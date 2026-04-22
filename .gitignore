@@ -46,5 +46,7 @@ next-env.d.ts
 
 /generated/prisma
 
+# SQL suelto (dumps, exports); las migraciones de Prisma sí van al repo.
 *.sql
+!prisma/migrations/**/migration.sql
 *.dump
