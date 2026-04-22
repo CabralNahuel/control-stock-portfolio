@@ -95,16 +95,12 @@ async function main() {
 
   let rows;
   try {
-    [rows] = await pool.query(
-      "SELECT COUNT(*) as n FROM Usuario WHERE deletedAt IS NULL"
-    );
+    [rows] = await pool.query("SELECT COUNT(*) as n FROM Usuario");
   } catch (e) {
     const errno = e && typeof e === "object" && "errno" in e ? e.errno : null;
     if (errno === 1146) {
       runMigrationsFromScript();
-      [rows] = await pool.query(
-        "SELECT COUNT(*) as n FROM Usuario WHERE deletedAt IS NULL"
-      );
+      [rows] = await pool.query("SELECT COUNT(*) as n FROM Usuario");
     } else {
       throw e;
     }
