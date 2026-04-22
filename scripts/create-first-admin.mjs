@@ -7,6 +7,7 @@
 import mysql from "mysql2/promise";
 import bcrypt from "bcryptjs";
 import { readFileSync } from "fs";
+import { execSync } from "child_process";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 
@@ -68,10 +69,46 @@ function poolConfig() {
 
 const pool = mysql.createPool(poolConfig());
 
-async function main() {
-  const [rows] = await pool.query(
-    "SELECT COUNT(*) as n FROM Usuario WHERE deletedAt IS NULL"
+function logTargetDb() {
+  const cfg = poolConfig();
+  console.log(
+    "[create-first-admin] Conectando a DB:",
+    cfg.database || "(sin nombre en URL — revisá DATABASE_URL)",
+    "| host:",
+    cfg.host
   );
+}
+
+function runMigrationsFromScript() {
+  console.log(
+    "[create-first-admin] Falta esquema: ejecutando npx prisma migrate deploy…"
+  );
+  execSync("npx prisma migrate deploy", {
+    stdio: "inherit",
+    env: process.env,
+    cwd: join(__dirname, ".."),
+  });
+}
+
+async function main() {
+  logTargetDb();
+
+  let rows;
+  try {
+    [rows] = await pool.query(
+      "SELECT COUNT(*) as n FROM Usuario WHERE deletedAt IS NULL"
+    );
+  } catch (e) {
+    const errno = e && typeof e === "object" && "errno" in e ? e.errno : null;
+    if (errno === 1146) {
+      runMigrationsFromScript();
+      [rows] = await pool.query(
+        "SELECT COUNT(*) as n FROM Usuario WHERE deletedAt IS NULL"
+      );
+    } else {
+      throw e;
+    }
+  }
   const count = rows[0]?.n ?? 0;
   if (count > 0) {
     console.log("Ya hay usuarios en la base. No se crea ninguno.");
